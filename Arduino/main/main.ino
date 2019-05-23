@@ -17,9 +17,9 @@
 #include <Servo.h>
 #include <SoftwareSerial.h>
 SoftwareSerial BTserial(8, 9); // RX | TX
-Servo servoWaist;  // create servo object to control a servo
-Servo servoShoulder;
-Servo servoElbow;
+//Servo servoWaist;  // create servo object to control a servo
+//Servo servoShoulder;
+//Servo servoElbow;
 int num;
 const long baudRate = 9600; 
 char c=' ';
@@ -27,16 +27,16 @@ String input = "";
 boolean NL = true;
 void setup() 
 {
-    servoElbow.attach(2);
-    servoShoulder.attach(3);
-    servoElbow.writeMicroseconds(1000);
-    servoShoulder.writeMicroseconds(1000);
-    randomSeed(analogRead(0));
+//    servoElbow.attach(2);
+//    servoShoulder.attach(3);
+//    servoElbow.writeMicroseconds(1000);
+//    servoShoulder.writeMicroseconds(1000);
+//    randomSeed(analogRead(0));
 
-//    Serial.begin(baudRate);
-//    Serial.print("Sketch:   ");   Serial.println(__FILE__);
-//    Serial.print("Uploaded: ");   Serial.println(__DATE__);
-//    Serial.println(" ");
+    Serial.begin(baudRate);
+    Serial.print("Sketch:   ");   Serial.println(__FILE__);
+    Serial.print("Uploaded: ");   Serial.println(__DATE__);
+    Serial.println(" ");
  
     BTserial.begin(baudRate);  
 //    Serial.print("BTserial started at "); Serial.println(baudRate);
@@ -66,30 +66,30 @@ void loop()
     // Read from the Bluetooth module and send to the Arduino Serial Monitor
     input = getString_BT();
     Serial.println(input);
-    char ch = input[0];
-    ch = ch & ~(0x20);
-    input.remove(0,1);
-    int n = input.toInt();  //convert readString into a number
-//    Serial.println(n); //so you can see the integer
-    switch(ch){
-//      case('W'):{
-//        servoWaist.writeMicroseconds(n);
+//    char ch = input[0];
+//    ch = ch & ~(0x20);
+//    input.remove(0,1);
+//    int n = input.toInt();  //convert readString into a number
+////    Serial.println(n); //so you can see the integer
+//    switch(ch){
+////      case('W'):{
+////        servoWaist.writeMicroseconds(n);
+////        break;
+////      }
+//      case('S'):{
+//        servoShoulder.writeMicroseconds(n);
 //        break;
 //      }
-      case('S'):{
-        servoShoulder.writeMicroseconds(n);
-        break;
-      }
-      case('E'):{
-        servoElbow.writeMicroseconds(n);
-        break;
-      }
-      case(DEFAULT):{
-        break;
-      }
-
-      
-    }
+//      case('E'):{
+//        servoElbow.writeMicroseconds(n);
+//        break;
+//      }
+//      case(DEFAULT):{
+//        break;
+//      }
+//
+//      
+//    }
 
  
  

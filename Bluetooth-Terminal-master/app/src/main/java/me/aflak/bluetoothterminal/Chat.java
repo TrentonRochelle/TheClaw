@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 import me.aflak.bluetooth.Bluetooth;
 
+import static java.lang.Math.round;
+
 public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCallback {
     private String name;
     private Bluetooth b;
@@ -73,18 +75,22 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         registerReceiver(mReceiver, filter);
         registered=true;
 
+
         seek_bar = (SeekBar)findViewById(R.id.seekBar);
-
+        seek_bar.setProgress(50);
         seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            int progress_value;
+            double progress_value;
+            double temp;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progress_value = progress;
-                progress_value = 600 + (progress_value*14);
-                b.send("e"+String.valueOf(progress_value));
+                temp = ((double) progress); //0 - 100
+                temp = -.003+(temp/50)*.003; //-.001 - .001
+//                progress_value = -1 + (progress_value/50.0);
+                progress_value = -temp;
+                String string = String.format("%.5f", progress_value).replaceAll("(\\.\\d+?)0*$", "$1");
+                b.send(string + "/");
                 try{
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(30);
                 }
                 catch(InterruptedException e) {
                     System.out.println("got interrupted!");
@@ -99,7 +105,12 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-//                    Toast.makeText(Chat.this,"SeekBar Stopped Tracking",Toast.LENGTH_LONG).show();
+//                Toast.makeText(Chat.this,"SeekBar Stopped Tracking",Toast.LENGTH_LONG).show();
+                seekBar.setProgress(50);
+                for(int i=0;i<200;i++){
+                    b.send(String.valueOf(0.0) + "/");
+                }
+
             }
         });
     }

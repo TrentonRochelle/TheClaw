@@ -22,7 +22,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.2.1'
-
     compile 'me.aflak.libraries:bluetooth:1.2.4'
     compile 'me.aflak.libraries:pulltorefresh:1.0'
 }
