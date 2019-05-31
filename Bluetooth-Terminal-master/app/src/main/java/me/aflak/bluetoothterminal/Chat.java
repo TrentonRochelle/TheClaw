@@ -1,4 +1,5 @@
 package me.aflak.bluetoothterminal;
+//package com.github.niqdev.ipcam;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -28,6 +29,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.content.res.Configuration;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.graphics.Color;
+import android.support.v4.view.ViewPager.DecorView;
+
+
+import com.github.niqdev.mjpeg.DisplayMode;
+import com.github.niqdev.mjpeg.Mjpeg;
+import com.github.niqdev.mjpeg.MjpegView;
+//import yjkim.mjpegviewer.MjpegView;
+
 
 
 import me.aflak.bluetooth.Bluetooth;
@@ -45,6 +58,10 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 //    private TextView text;
 //    private ScrollView scrollView;
 //    private static SeekBar seek_bar;
+    private static final int TIMEOUT = 5;
+    public static final String PREF_FLIP_HORIZONTAL = "com.github.niqdev.ipcam.settings.SettingsActivity.FLIP_HORIZONTAL";
+    public static final String PREF_FLIP_VERTICAL= "com.github.niqdev.ipcam.settings.SettingsActivity.FLIP_VERTICAL";
+
     private boolean registered=false;
 
     private TextView mTextViewAngleLeft;
@@ -72,6 +89,10 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private Context mContext;
 
     private SensorManager mSensorManager;
+
+    private MjpegView mjpegView;
+//    private MjpegView mv;
+
 
 
 
@@ -117,6 +138,20 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         setContentView(R.layout.activity_main);
 
         mContext = getApplicationContext();
+
+        mjpegView = (MjpegView) findViewById(R.id.surface_view);
+
+//        mjpegView.setScaleType(ScaleType.FIT_XY);
+
+        System.out.println("before start ##################");
+//        mv.Start("http://10.17.2.33:8080/?action=stream");
+        loadIpCam();
+        System.out.println("after start ##################");
+
+//        View view = (getLayoutInflater().inflate(R.layout.activit, null);
+//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id. Main);
+//        view.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//        relativeLayout.addView(view);
 
 
 //        text = (TextView)findViewById(R.id.text);
@@ -241,50 +276,159 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         // ###########################################################################//
 
 
-//        seek_bar = (SeekBar)findViewById(R.id.seekBar);
-//        seek_bar.setProgress(50);
-//        seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            double progress_value;
-//            double temp;
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                temp = ((double) progress); //0 - 100
-//                temp = -.003+(temp/50)*.003; //-.001 - .001
-////                progress_value = -1 + (progress_value/50.0);
-//                progress_value = -temp;
-//                String string = String.format("%.5f", progress_value).replaceAll("(\\.\\d+?)0*$", "$1");
-//                b.send(string + "/");
-//                try{
-//                    TimeUnit.MILLISECONDS.sleep(30);
-//                }
-//                catch(InterruptedException e) {
-//                    System.out.println("got interrupted!");
-//                }
-////                Toast.makeText(Chat.this,"SeekBar value is: " + String.valueOf(progress_value),Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-////                    Toast.makeText(Chat.this,"SeekBar Started Tracking",Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-////                Toast.makeText(Chat.this,"SeekBar Stopped Tracking",Toast.LENGTH_LONG).show();
-//                seekBar.setProgress(50);
-//                for(int i=0;i<200;i++){
-//                    b.send(String.valueOf(0.0) + "/");
-//                }
-//
-//            }
-//        });
+
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        loadIpCam();
+
+    }
+
+
+
+    //
+//    final Handler MjpegViewHandler = new Handler(){
+//        @Override
+//        public void handleMessage(Message msg){
+//            Log.d("State : ", msg.obj.toString());
+//
+//            switch (msg.obj.toString()){
+//                case "DISCONNECTED" :
+//                    // TODO : When video stream disconnected
+//                    break;
+//                case "CONNECTION_PROGRESS" :
+//                    // TODO : When connection progress
+//                    break;
+//                case "CONNECTED" :
+//                    // TODO : When video streaming connected
+//                    break;
+//                case "CONNECTION_ERROR" :
+//                    // TODO : When connection error
+//                    break;
+//                case "STOPPING_PROGRESS" :
+//                    // TODO : When MjpegViewer is in stopping progress
+//                    break;
+//            }
+//
+//        }
+//    };
+
+
+
+
+
+
+    //#########################################################################################
+    // TRY 1
+    private SharedPreferences getSharedPreferences() {
+        return PreferenceManager
+                .getDefaultSharedPreferences(this);
+    }
+
+    private String getPreference(String key) {
+        return getSharedPreferences()
+                .getString(key, "");
+    }
+
+    private Boolean getBooleanPreference(String key) {
+        return getSharedPreferences()
+                .getBoolean(key, false);
+    }
+
+    private DisplayMode calculateDisplayMode() {
+        int orientation = getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_LANDSCAPE ?
+                DisplayMode.FULLSCREEN : DisplayMode.BEST_FIT;
+    }
+
+
+    private void loadIpCam() {
+        Mjpeg.newInstance()
+//                .credential(getPreference(PREF_AUTH_USERNAME), getPreference(PREF_AUTH_PASSWORD))
+//                .open("http://10.17.2.33:8080/?action=stream", TIMEOUT)
+                .open("http://10.17.2.33:8080/?action=stream", TIMEOUT)
+                .subscribe(
+                        inputStream -> {
+                            mjpegView.setSource(inputStream);
+                            mjpegView.setDisplayMode(calculateDisplayMode());
+//                            mjpegView.flipHorizontal(getBooleanPreference(PREF_FLIP_HORIZONTAL));
+                            mjpegView.flipHorizontal(getBooleanPreference(PREF_FLIP_HORIZONTAL));
+                            mjpegView.flipVertical(getBooleanPreference(PREF_FLIP_VERTICAL));
+//                            mjpegView.setRotate(Float.parseFloat(getPreference(PREF_ROTATE_DEGREES)));
+                            mjpegView.showFps(true);
+                            mjpegView.setCustomBackgroundColor(Color.DKGRAY);
+                        },
+                        throwable -> {
+                            Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
+                            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+                        });
+
+//        .subscribe(inputStream -> {
+//                    mjpegView.setSource(inputStream);
+//                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
+//                    mjpegView.showFps(true);
+//                    mjpegView.setTransparentBackground();
+//                });
+    }
+
+
+    //#########################################################################################
+    // MATH FUNCTIONS
 
     private double smoothControlFunction(double x) {
 
         return (1.5*x);
     }
 
+//
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            hideSystemUI();
+//        }
+//    }
+//
+//    private void hideSystemUI() {
+//        // Enables regular immersive mode.
+//        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+//        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//        View decorView = getWindow().getDecorView();
+//        decorView.setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_IMMERSIVE
+//                        // Set the content to appear under the system bars so that the
+//                        // content doesn't resize when the system bars hide and show.
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        // Hide the nav bar and status bar
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+//    }
+//
+//    // Shows the system bars by removing all the flags
+//    // except for the ones that make the content appear under the system bars.
+//    private void showSystemUI() {
+//        View decorView = getWindow().getDecorView();
+//        decorView.setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            decorView.setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);}
+//    }
 
 
 
@@ -312,15 +456,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 //            Log.d("On Gyro Change", stringBuilder.toString());
         }
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     public void onDestroy() {
@@ -405,6 +540,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     @Override
     public void onMessage(String message) {
 //        Display(name+": "+message);
+        Toast.makeText(getApplicationContext(), "RECEIVED FROM PI:"+message, Toast.LENGTH_LONG).show();
     }
 
     @Override
