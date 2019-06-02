@@ -9,20 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Chat">
 
-    <TextView
-        android:id="@+id/textView_angle_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0°"/>
-
-    <TextView
-        android:id="@+id/textView_strength_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_angle_left"
-        android:layout_marginTop="2dp"
-        android:text="0%" />
-
     <!--<com.github.niqdev.mjpeg.MjpegSurfaceView-->
         <!--android:id="@+id/surface_view"-->
         <!--android:layout_width="match_parent"-->
@@ -46,17 +32,19 @@
         android:id="@+id/textView_gyros_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_strength_left"
-        android:layout_marginTop="2dp"
+        android:layout_below="@+id/textView_coordinate_left"
+        android:layout_marginTop="4dp"
+        android:textColor="#000000"
         android:text="waist=0.000: shoulder=0.000" />
 
     <TextView
         android:id="@+id/textView_coordinate_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_gyros_left"
-        android:layout_marginTop="2dp"
-        android:text= "elbow=0.000: claw=0.000"/>
+        android:layout_alignTop="@+id/joystickView_left"
+        android:layout_marginTop="1dp"
+        android:textColor="#000000"
+        android:text="elbow=0.000: claw=0.000" />
 
     <io.github.controlwear.virtual.joystick.android.JoystickView xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/joystickView_left"
@@ -71,43 +59,43 @@
         custom:JV_buttonColor="#40FFFFF2"
         custom:JV_buttonSizeRatio="20%" />
 
-    <TextView
-        android:id="@+id/textView_angle_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="0°"/>
-
-    <TextView
-        android:id="@+id/textView_strength_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView_angle_right"
-        android:text="0%"/>
-
 
     <TextView
         android:id="@+id/textView_coordinate_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_strength_right"
+        android:layout_alignTop="@+id/joystickView_right"
+        android:layout_alignEnd="@+id/joystickView_right"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="13dp"
+        android:textColor="#000000"
         android:text="wrist_el=0.000: wrist_rot=0.000" />
 
 
-    <io.github.controlwear.virtual.joystick.android.JoystickView xmlns:custom="http://schemas.android.com/apk/res-auto"
+    <io.github.controlwear.virtual.joystick.android.JoystickView
         android:id="@+id/joystickView_right"
         android:layout_width="249dp"
         android:layout_height="242dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        custom:JV_backgroundColor="#00BCC90E"
-        custom:JV_backgroundSizeRatio="60%"
-        custom:JV_borderWidth="2dp"
-        custom:JV_borderColor="#C3C3C3"
-        custom:JV_buttonColor="#40FFFFF2"
-        custom:JV_buttonSizeRatio="20%"/>
+        android:layout_alignParentRight="true"
+        stream:JV_backgroundColor="#00BCC90E"
+        stream:JV_backgroundSizeRatio="60%"
+        stream:JV_borderColor="#C3C3C3"
+        stream:JV_borderWidth="2dp"
+        stream:JV_buttonColor="#40FFFFF2"
+        stream:JV_buttonSizeRatio="20%" />
+
+    <Button
+        android:id="@+id/waistLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/joystickView_left"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_marginStart="210dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/button_unlocked" />
     <!--custom:JV_borderColor="#00FFFFFF"-->
     <!--<EditText-->
         <!--android:id="@+id/message"-->

@@ -35,7 +35,7 @@ import android.preference.PreferenceManager;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager.DecorView;
 
-
+import android.widget.Button;
 import com.github.niqdev.mjpeg.DisplayMode;
 import com.github.niqdev.mjpeg.Mjpeg;
 import com.github.niqdev.mjpeg.MjpegView;
@@ -81,6 +81,13 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private double elbowVelocity = 0.0;
     private double clawVelocity = 0.0;
 
+    private boolean waistLock = false;
+    private boolean shoulderLock = false;
+    private boolean wristElLock = false;
+    private boolean wristLock = false;
+    private boolean elbowLock = false;
+    private boolean clawLock = false;
+
     private JoystickView joystickRight;
     private JoystickView joystickLeft;
 
@@ -94,8 +101,8 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 //    private MjpegView mv;
 
 
-
-
+//    private Button button1 = new Button(getApplicationContext());
+//    button1.setBackground(getResources().getDrawable(R.drawable.button));
 
     // Create the Handler object (on the main thread by default)
     Handler handler = new Handler();
@@ -120,14 +127,15 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             cmd_string.append(elbow_string).append(":");
             cmd_string.append(wrist_el_string).append(":");
             cmd_string.append(wrist_rot_string).append(":");
+
             cmd_string.append(claw_string).append("/");
 
             if(b.isConnected()){
-                System.out.println("Connected");
+//                System.out.println("Connected");
                 b.send(cmd_string.toString());
             }
-            System.out.println("yunk");
-            Log.d("Handlers", cmd_string.toString());
+//            System.out.println("yunk");
+//            Log.d("Handlers", cmd_string.toString());
             handler.postDelayed(runnableCode, baud);
         }
     };
@@ -215,24 +223,24 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         // ----------------------------  JOYSTICK SETUP ----------------------------- //
         // ###########################################################################//
-        mTextViewAngleLeft = (TextView) findViewById(R.id.textView_angle_left);
-        mTextViewStrengthLeft = (TextView) findViewById(R.id.textView_strength_left);
         mTextViewCoordinateLeft = (TextView) findViewById(R.id.textView_coordinate_left);
 
         joystickLeft = (JoystickView) findViewById(R.id.joystickView_left);
         joystickLeft.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
-                mTextViewAngleLeft.setText(angle + "°");
-                mTextViewStrengthLeft.setText(strength + "%");
 
-                elbowVelocity = (-1.0 + joystickLeft.getNormalizedX()/50.0) * 1.414 / 100.0;
+                int bandaidElbow = joystickLeft.getNormalizedX()==52 ? 50 : joystickLeft.getNormalizedX();
+                elbowVelocity = (-1.0 + bandaidElbow/50.0) * 1.414;
                 elbowVelocity = elbowVelocity > 1 ? 1 : elbowVelocity;
                 elbowVelocity = elbowVelocity < -1 ? -1 : elbowVelocity;
+                elbowVelocity = .005*(elbowVelocity*elbowVelocity*elbowVelocity);
 
-                clawVelocity = (1.0 - joystickLeft.getNormalizedY()/50.0) * 1.414 / 100.0;
+                int bandaidClaw = joystickLeft.getNormalizedY()==52 ? 50 : joystickLeft.getNormalizedY();
+                clawVelocity = (1.0 - bandaidClaw/50.0) * 1.414;
                 clawVelocity = clawVelocity > 1 ? 1 : clawVelocity;
                 clawVelocity = clawVelocity < -1 ? -1 : clawVelocity;
+                clawVelocity = .005*(clawVelocity*clawVelocity*clawVelocity);
 
                 mTextViewCoordinateLeft.setText(
                         String.format("elbow=%.3f: claw=%.3f",
@@ -244,8 +252,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         });
 
 
-        mTextViewAngleRight = (TextView) findViewById(R.id.textView_angle_right);
-        mTextViewStrengthRight = (TextView) findViewById(R.id.textView_strength_right);
         mTextViewCoordinateRight = (TextView) findViewById(R.id.textView_coordinate_right);
 
         joystickRight = (JoystickView) findViewById(R.id.joystickView_right);
@@ -253,20 +259,22 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             @SuppressLint("DefaultLocale")
             @Override
             public void onMove(int angle, int strength) {
-                mTextViewAngleRight.setText(angle + "°");
-                mTextViewStrengthRight.setText(strength + "%");
 
-                wristElVelocity = (-1.0 + joystickRight.getNormalizedX()/50.0) * 1.414 / 100.0;
+                int bandaidWristEl = joystickRight.getNormalizedX()==52 ? 50 : joystickRight.getNormalizedX();
+                wristElVelocity = (-1.0 + bandaidWristEl/50.0) * 1.414;
                 wristElVelocity = wristElVelocity > 1 ? 1 : wristElVelocity;
                 wristElVelocity = wristElVelocity < -1 ? -1 : wristElVelocity;
+                wristElVelocity = .005*(wristElVelocity*wristElVelocity*wristElVelocity);
 
-                wristRotVelocity = (1.0 - joystickRight.getNormalizedY()/50.0) * 1.414 / 100.0;
+                int bandaidWristRot = joystickRight.getNormalizedY()==52 ? 50 : joystickRight.getNormalizedY();
+                wristRotVelocity = (1.0 - bandaidWristRot/50.0) * 1.414;
                 wristRotVelocity = wristRotVelocity > 1 ? 1 : wristRotVelocity;
                 wristRotVelocity = wristRotVelocity < -1 ? -1 : wristRotVelocity;
+                wristRotVelocity = .005*(wristRotVelocity*wristRotVelocity*wristRotVelocity);
 
                 mTextViewCoordinateRight.setText(
                         String.format("wrist_el=%.3f: wrist_rot=%.3f",
-                                wristRotVelocity,wristElVelocity)
+                                wristElVelocity,wristRotVelocity)
                 );
             }
         });
@@ -348,7 +356,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         Mjpeg.newInstance()
 //                .credential(getPreference(PREF_AUTH_USERNAME), getPreference(PREF_AUTH_PASSWORD))
 //                .open("http://10.17.2.33:8080/?action=stream", TIMEOUT)
-                .open("http://10.17.2.33:8080/?action=stream", TIMEOUT)
+                .open("http://10.17.2.190:8080/?action=stream", TIMEOUT)
                 .subscribe(
                         inputStream -> {
                             mjpegView.setSource(inputStream);
@@ -359,6 +367,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 //                            mjpegView.setRotate(Float.parseFloat(getPreference(PREF_ROTATE_DEGREES)));
                             mjpegView.showFps(true);
                             mjpegView.setCustomBackgroundColor(Color.DKGRAY);
+//                            mjpegView.setTransparentBackground();
                         },
                         throwable -> {
                             Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
@@ -444,8 +453,16 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         if (sensor.getType() == Sensor.TYPE_GRAVITY) {
 
-            waistVelocity = event.values[1]/1000;
-            shoulderVelocity = -event.values[0]/1000;
+            waistVelocity = event.values[1]/10;
+            shoulderVelocity = -event.values[0]/10;
+//            waistVelocity = waistVelocity * .4;
+            waistVelocity = .4*(waistVelocity*waistVelocity*waistVelocity*waistVelocity*waistVelocity);
+            shoulderVelocity = .02*(shoulderVelocity*shoulderVelocity*shoulderVelocity);
+
+            waistVelocity = waistVelocity > .04 ? .04 : waistVelocity;
+            waistVelocity = waistVelocity < -.04 ? -.04 : waistVelocity;
+            shoulderVelocity = shoulderVelocity > .005 ? .005 : shoulderVelocity;
+            shoulderVelocity = shoulderVelocity < -.005 ? -.005 : shoulderVelocity;
 
             mTextViewGyroLeft.setText(
                     String.format("waist=%.3f: shoulder=%.3f",
@@ -596,6 +613,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             }
         }
     };
+
 //    public void seekbarr(Bluetooth b){
 //        seek_bar = (SeekBar)findViewById(R.id.seekBar);
 //
