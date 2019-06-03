@@ -28,6 +28,66 @@
         <!--android:layout_height="match_parent"-->
         <!--android:id="@+id/videwView" />-->
 
+    <Button
+        android:id="@+id/waistLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/joystickView_left"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/button_unlocked" />
+
+    <Button
+        android:id="@+id/shoulderLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="34dp"
+        android:layout_toEndOf="@+id/waistLock"
+        android:background="@drawable/button_unlocked" />
+
+    <Button
+        android:id="@+id/elbowLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="34dp"
+        android:layout_toEndOf="@+id/shoulderLock"
+        android:background="@drawable/button_unlocked" />
+
+    <Button
+        android:id="@+id/wristElevationLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="15dp"
+        android:layout_toStartOf="@+id/wristRotationLock"
+        android:background="@drawable/button_unlocked" />
+
+    <Button
+        android:id="@+id/wristRotationLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="15dp"
+        android:layout_toStartOf="@+id/clawLock"
+        android:background="@drawable/button_unlocked" />
+
+    <Button
+        android:id="@+id/clawLock"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_alignEnd="@+id/joystickView_right"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="220dp"
+        android:background="@drawable/button_unlocked" />
+
     <TextView
         android:id="@+id/textView_gyros_left"
         android:layout_width="wrap_content"
@@ -87,15 +147,6 @@
         stream:JV_buttonColor="#40FFFFF2"
         stream:JV_buttonSizeRatio="20%" />
 
-    <Button
-        android:id="@+id/waistLock"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignStart="@+id/joystickView_left"
-        android:layout_alignTop="@+id/surface_view"
-        android:layout_marginStart="210dp"
-        android:layout_marginTop="9dp"
-        android:background="@drawable/button_unlocked" />
     <!--custom:JV_borderColor="#00FFFFFF"-->
     <!--<EditText-->
         <!--android:id="@+id/message"-->

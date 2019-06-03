@@ -50,7 +50,7 @@ import 	android.util.Log;
 
 import static java.lang.Math.round;
 
-public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCallback, SensorEventListener {
+public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCallback, SensorEventListener, View.OnClickListener {
     private String name;
     private Bluetooth b;
 //    private EditText message;
@@ -83,26 +83,32 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
     private boolean waistLock = false;
     private boolean shoulderLock = false;
-    private boolean wristElLock = false;
-    private boolean wristLock = false;
+    private boolean wristElevationLock = false;
+    private boolean wristRotationLock = false;
     private boolean elbowLock = false;
     private boolean clawLock = false;
 
     private JoystickView joystickRight;
     private JoystickView joystickLeft;
 
-    final private int baud = 25;
+    final private int baud = 30;
 
     private Context mContext;
 
     private SensorManager mSensorManager;
 
     private MjpegView mjpegView;
+    private String mIP;
+    private boolean mRequestIP = false;
+    private boolean loaded = false;
 //    private MjpegView mv;
 
-
-//    private Button button1 = new Button(getApplicationContext());
-//    button1.setBackground(getResources().getDrawable(R.drawable.button));
+    private Button waistLockButton;
+    private Button shoulderLockButton;
+    private Button elbowLockButton;
+    private Button wristElevationLockButton;
+    private Button wristRotationLockButton;
+    private Button clawLockButton;
 
     // Create the Handler object (on the main thread by default)
     Handler handler = new Handler();
@@ -121,7 +127,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             String claw_string = String.format("%.3f", clawVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
 
             StringBuilder cmd_string = new StringBuilder();
-
+            cmd_string.append("s");
             cmd_string.append(waist_string).append(":");
             cmd_string.append(shoulder_string).append(":");
             cmd_string.append(elbow_string).append(":");
@@ -129,6 +135,12 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             cmd_string.append(wrist_rot_string).append(":");
 
             cmd_string.append(claw_string).append("/");
+
+            if(mRequestIP) {
+                mRequestIP = false;
+                Log.d("TIMER", "yunk");
+                b.send("R");
+            }
 
             if(b.isConnected()){
 //                System.out.println("Connected");
@@ -146,6 +158,18 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         setContentView(R.layout.activity_main);
 
         mContext = getApplicationContext();
+        waistLockButton = findViewById(R.id.waistLock);
+        shoulderLockButton = findViewById(R.id.shoulderLock);
+        elbowLockButton = findViewById(R.id.elbowLock);
+        wristElevationLockButton = findViewById(R.id.wristElevationLock);
+        wristRotationLockButton = findViewById(R.id.wristRotationLock);
+        clawLockButton = findViewById(R.id.clawLock);
+        waistLockButton.setOnClickListener(this);
+        shoulderLockButton.setOnClickListener(this);
+        elbowLockButton.setOnClickListener(this);
+        wristElevationLockButton.setOnClickListener(this);
+        wristRotationLockButton.setOnClickListener(this);
+        clawLockButton.setOnClickListener(this);
 
         mjpegView = (MjpegView) findViewById(R.id.surface_view);
 
@@ -153,7 +177,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         System.out.println("before start ##################");
 //        mv.Start("http://10.17.2.33:8080/?action=stream");
-        loadIpCam();
+//        loadIpCam();
         System.out.println("after start ##################");
 
 //        View view = (getLayoutInflater().inflate(R.layout.activit, null);
@@ -294,7 +318,74 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
     }
 
-
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId()) {
+            case R.id.waistLock:
+                // Do something
+                waistLock = !waistLock;
+                if(waistLock){
+                    waistLockButton.setBackgroundResource(R.drawable.button_locked);
+                }
+                else{
+                    waistLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                }
+                break;
+            case R.id.shoulderLock:
+                // Do something
+                shoulderLock = !shoulderLock;
+                if(shoulderLock){
+                    shoulderLockButton.setBackgroundResource(R.drawable.button_locked);
+                }
+                else{
+                    shoulderLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                }
+                break;
+            case R.id.elbowLock:
+                // Do something
+                elbowLock = !elbowLock;
+                if(elbowLock){
+                    elbowLockButton.setBackgroundResource(R.drawable.button_locked);
+                }
+                else{
+                    elbowLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                }
+                break;
+            case R.id.wristElevationLock:
+                // Do something
+                wristElevationLock = !wristElevationLock;
+                if(wristElevationLock){
+                    wristElevationLockButton.setBackgroundResource(R.drawable.button_locked);
+                }
+                else{
+                    wristElevationLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                }
+                break;
+            case R.id.wristRotationLock:
+                // Do something
+                wristRotationLock = !wristRotationLock;
+                if(wristRotationLock){
+                    wristRotationLockButton.setBackgroundResource(R.drawable.button_locked);
+                }
+                else{
+                    wristRotationLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                }
+                break;
+            case R.id.clawLock:
+                // Do something
+                clawLock = !clawLock;
+                if(clawLock){
+                    clawLockButton.setBackgroundResource(R.drawable.button_locked);
+                }
+                else{
+                    clawLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     //
 //    final Handler MjpegViewHandler = new Handler(){
@@ -353,10 +444,17 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
 
     private void loadIpCam() {
+        StringBuilder url = new StringBuilder();
+        url.append("http://");
+        url.append(mIP);
+        url.append(":8080/?action=stream");
+
         Mjpeg.newInstance()
 //                .credential(getPreference(PREF_AUTH_USERNAME), getPreference(PREF_AUTH_PASSWORD))
 //                .open("http://10.17.2.33:8080/?action=stream", TIMEOUT)
-                .open("http://10.17.2.190:8080/?action=stream", TIMEOUT)
+//                .open("http://169.231.85.222:8080/?action=stream", TIMEOUT)
+
+                .open(url.toString(),TIMEOUT)
                 .subscribe(
                         inputStream -> {
                             mjpegView.setSource(inputStream);
@@ -539,6 +637,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 //        });
         joystickRight.setEnabled(true);
         joystickLeft.setEnabled(true);
+        mRequestIP = true;
 //        Toast.makeText(mContext, "Connected to The Claw", Toast.LENGTH_SHORT);
         runOnUiThread(new Runnable() {
             public void run() {
@@ -556,8 +655,15 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
     @Override
     public void onMessage(String message) {
+        mIP = message;
+        if(!loaded){
+            Log.d("onMessage",message);
+            loadIpCam();
+            loaded=true;
+        }
 //        Display(name+": "+message);
-        Toast.makeText(getApplicationContext(), "RECEIVED FROM PI:"+message, Toast.LENGTH_LONG).show();
+//        Log.d("onMessage",message);
+//        Toast.makeText(getApplicationContext(), "RECEIVED FROM PI", Toast.LENGTH_LONG).show();
     }
 
     @Override
