@@ -38,6 +38,8 @@
         android:layout_marginTop="33dp"
         android:background="@drawable/button_unlocked" />
 
+
+
     <Button
         android:id="@+id/shoulderLock"
         android:layout_width="30dp"
@@ -77,18 +79,6 @@
         android:layout_marginEnd="15dp"
         android:layout_toStartOf="@+id/clawLock"
         android:background="@drawable/button_unlocked" />
-
-    <TextView
-        android:id="@+id/ipAddressText"
-        android:layout_width="103dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/joystickView_left"
-        android:layout_alignTop="@+id/surface_view"
-        android:layout_alignEnd="@+id/surface_view"
-        android:layout_marginStart="557dp"
-        android:layout_marginTop="355dp"
-        android:layout_marginEnd="39dp"
-        android:text="TextView" />
 
     <Button
         android:id="@+id/clawLock"
@@ -145,6 +135,18 @@
         android:textColor="#000000"
         android:text="wrist_el=0.000: wrist_rot=0.000" />
 
+    <TextView
+        android:id="@+id/ipAddressText"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/joystickView_left"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="648dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:text="IPADDRESS"
+        android:textColor="#000000" />
 
     <io.github.controlwear.virtual.joystick.android.JoystickView
         android:id="@+id/joystickView_right"
