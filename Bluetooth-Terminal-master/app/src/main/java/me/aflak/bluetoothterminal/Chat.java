@@ -53,11 +53,6 @@ import static java.lang.Math.round;
 public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCallback, SensorEventListener, View.OnClickListener {
     private String name;
     private Bluetooth b;
-//    private EditText message;
-//    private Button send;
-//    private TextView text;
-//    private ScrollView scrollView;
-//    private static SeekBar seek_bar;
     private static final int TIMEOUT = 5;
     public static final String PREF_FLIP_HORIZONTAL = "com.github.niqdev.ipcam.settings.SettingsActivity.FLIP_HORIZONTAL";
     public static final String PREF_FLIP_VERTICAL= "com.github.niqdev.ipcam.settings.SettingsActivity.FLIP_VERTICAL";
@@ -73,6 +68,8 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private TextView mTextViewCoordinateRight;
 
     private TextView mTextViewGyroLeft;
+
+    private TextView mIpAddress;
 
     private double waistVelocity = 0.0;
     private double shoulderVelocity = 0.0;
@@ -101,7 +98,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private String mIP;
     private boolean mRequestIP = false;
     private boolean loaded = false;
-//    private MjpegView mv;
 
     private Button waistLockButton;
     private Button shoulderLockButton;
@@ -119,12 +115,33 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             // Do something here on the main thread
 
             // Repeat this the same runnable code block again another 2 seconds
+            if(waistLock){
+                waistVelocity =  0.0;
+            }
+            if(shoulderLock){
+                shoulderVelocity = 0.0;
+            }
+            if(elbowLock){
+                elbowVelocity = 0.0;
+            }
+            if(wristElevationLock){
+                wristElVelocity = 0.0;
+            }
+            if(wristRotationLock){
+                wristRotVelocity = 0.0;
+            }
+            if(clawLock){
+                clawVelocity=0.0;
+            }
+
+
             String waist_string = String.format("%.3f", waistVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String shoulder_string = String.format("%.3f", shoulderVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String elbow_string = String.format("%.3f", elbowVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String wrist_el_string = String.format("%.3f", wristElVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String wrist_rot_string = String.format("%.3f", wristRotVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String claw_string = String.format("%.3f", clawVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
+
 
             StringBuilder cmd_string = new StringBuilder();
             cmd_string.append("s");
@@ -143,11 +160,8 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             }
 
             if(b.isConnected()){
-//                System.out.println("Connected");
                 b.send(cmd_string.toString());
             }
-//            System.out.println("yunk");
-//            Log.d("Handlers", cmd_string.toString());
             handler.postDelayed(runnableCode, baud);
         }
     };
@@ -173,26 +187,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         mjpegView = (MjpegView) findViewById(R.id.surface_view);
 
-//        mjpegView.setScaleType(ScaleType.FIT_XY);
 
-        System.out.println("before start ##################");
-//        mv.Start("http://10.17.2.33:8080/?action=stream");
-//        loadIpCam();
-        System.out.println("after start ##################");
-
-//        View view = (getLayoutInflater().inflate(R.layout.activit, null);
-//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id. Main);
-//        view.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//        relativeLayout.addView(view);
-
-
-//        text = (TextView)findViewById(R.id.text);
-//        message = (EditText)findViewById(R.id.message);
-//        send = (Button)findViewById(R.id.send);
-//        scrollView = (ScrollView) findViewById(R.id.scrollView);
-
-//        text.setMovementMethod(new ScrollingMovementMethod());
-//        send.setEnabled(false);
 
 
         // ------------------------------  SENSOR SETUP ----------------------------- //
@@ -231,24 +226,13 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         handler.post(runnableCode);
         // ###########################################################################//
 
-//        send.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String msg = message.getText().toString();
-//                message.setText("");
-//                b.send(msg);
-//                Display("You: "+msg);
-//            }
-//        });
-
-
 
 
 
         // ----------------------------  JOYSTICK SETUP ----------------------------- //
         // ###########################################################################//
         mTextViewCoordinateLeft = (TextView) findViewById(R.id.textView_coordinate_left);
-
+        mIpAddress = findViewById(R.id.ipAddressText);
         joystickLeft = (JoystickView) findViewById(R.id.joystickView_left);
         joystickLeft.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
@@ -283,6 +267,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             @SuppressLint("DefaultLocale")
             @Override
             public void onMove(int angle, int strength) {
+
 
                 int bandaidWristEl = joystickRight.getNormalizedX()==52 ? 50 : joystickRight.getNormalizedX();
                 wristElVelocity = (-1.0 + bandaidWristEl/50.0) * 1.414;
@@ -387,37 +372,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         }
     }
 
-    //
-//    final Handler MjpegViewHandler = new Handler(){
-//        @Override
-//        public void handleMessage(Message msg){
-//            Log.d("State : ", msg.obj.toString());
-//
-//            switch (msg.obj.toString()){
-//                case "DISCONNECTED" :
-//                    // TODO : When video stream disconnected
-//                    break;
-//                case "CONNECTION_PROGRESS" :
-//                    // TODO : When connection progress
-//                    break;
-//                case "CONNECTED" :
-//                    // TODO : When video streaming connected
-//                    break;
-//                case "CONNECTION_ERROR" :
-//                    // TODO : When connection error
-//                    break;
-//                case "STOPPING_PROGRESS" :
-//                    // TODO : When MjpegViewer is in stopping progress
-//                    break;
-//            }
-//
-//        }
-//    };
-
-
-
-
-
 
     //#########################################################################################
     // TRY 1
@@ -450,9 +404,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         url.append(":8080/?action=stream");
 
         Mjpeg.newInstance()
-//                .credential(getPreference(PREF_AUTH_USERNAME), getPreference(PREF_AUTH_PASSWORD))
-//                .open("http://10.17.2.33:8080/?action=stream", TIMEOUT)
-//                .open("http://169.231.85.222:8080/?action=stream", TIMEOUT)
 
                 .open(url.toString(),TIMEOUT)
                 .subscribe(
@@ -472,12 +423,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
                             Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
                         });
 
-//        .subscribe(inputStream -> {
-//                    mjpegView.setSource(inputStream);
-//                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
-//                    mjpegView.showFps(true);
-//                    mjpegView.setTransparentBackground();
-//                });
+
     }
 
 
@@ -489,53 +435,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         return (1.5*x);
     }
 
-//
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//            hideSystemUI();
-//        }
-//    }
-//
-//    private void hideSystemUI() {
-//        // Enables regular immersive mode.
-//        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-//        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//        View decorView = getWindow().getDecorView();
-//        decorView.setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_IMMERSIVE
-//                        // Set the content to appear under the system bars so that the
-//                        // content doesn't resize when the system bars hide and show.
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                        // Hide the nav bar and status bar
-//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
-//    }
-//
-//    // Shows the system bars by removing all the flags
-//    // except for the ones that make the content appear under the system bars.
-//    private void showSystemUI() {
-//        View decorView = getWindow().getDecorView();
-//        decorView.setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//    }
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//            decorView.setSystemUiVisibility(
-//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);}
-//    }
 
 
 
@@ -567,8 +466,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
                             waistVelocity,shoulderVelocity)
             );
 
-//            System.out.println(stringBuilder.toString());
-//            Log.d("On Gyro Change", stringBuilder.toString());
+
         }
     }
 
@@ -616,29 +514,13 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         }
     }
 
-//    public void Display(final String s){
-//        this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                text.append(s + "\n");
-//                scrollView.fullScroll(View.FOCUS_DOWN);
-//            }
-//        });
-//    }
 
     @Override
     public void onConnect(BluetoothDevice device) {
-//        Display("Connected to "+device.getName()+" - "+device.getAddress());
-//        this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                send.setEnabled(true);
-//            }
-//        });
+
         joystickRight.setEnabled(true);
         joystickLeft.setEnabled(true);
         mRequestIP = true;
-//        Toast.makeText(mContext, "Connected to The Claw", Toast.LENGTH_SHORT);
         runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(getApplicationContext(), "Status = Connected to The Claw", Toast.LENGTH_LONG).show();
@@ -648,8 +530,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
     @Override
     public void onDisconnect(BluetoothDevice device, String message) {
-//        Display("Disconnected!");
-//        Display("Connecting again...");
         b.connectToDevice(device);
     }
 
@@ -658,23 +538,20 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         mIP = message;
         if(!loaded){
             Log.d("onMessage",message);
+            mIpAddress.setText(message);
             loadIpCam();
             loaded=true;
         }
-//        Display(name+": "+message);
-//        Log.d("onMessage",message);
-//        Toast.makeText(getApplicationContext(), "RECEIVED FROM PI", Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public void onError(String message) {
-//        Display("Error: "+message);
     }
 
     @Override
     public void onConnectError(final BluetoothDevice device, String message) {
-//        Display("Error: "+message);
-//        Display("Trying again in 3 sec.");
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -720,31 +597,4 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         }
     };
 
-//    public void seekbarr(Bluetooth b){
-//        seek_bar = (SeekBar)findViewById(R.id.seekBar);
-//
-//        seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//
-//                int progress_value;
-//                @Override
-//                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                    progress_value = progress;
-//                    progress_value = 600 + (progress_value*14);
-//                    b.send("e"+String.valueOf(progress_value));
-//                    Toast.makeText(Chat.this,"SeekBar value is: " + String.valueOf(progress_value),Toast.LENGTH_LONG).show();
-//                }
-//
-//                @Override
-//                public void onStartTrackingTouch(SeekBar seekBar) {
-////                    Toast.makeText(Chat.this,"SeekBar Started Tracking",Toast.LENGTH_LONG).show();
-//                }
-//
-//                @Override
-//                public void onStopTrackingTouch(SeekBar seekBar) {
-////                    Toast.makeText(Chat.this,"SeekBar Stopped Tracking",Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        );
-//
-//    }
 }

@@ -78,6 +78,18 @@
         android:layout_toStartOf="@+id/clawLock"
         android:background="@drawable/button_unlocked" />
 
+    <TextView
+        android:id="@+id/ipAddressText"
+        android:layout_width="103dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/joystickView_left"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_marginStart="557dp"
+        android:layout_marginTop="355dp"
+        android:layout_marginEnd="39dp"
+        android:text="TextView" />
+
     <Button
         android:id="@+id/clawLock"
         android:layout_width="30dp"
