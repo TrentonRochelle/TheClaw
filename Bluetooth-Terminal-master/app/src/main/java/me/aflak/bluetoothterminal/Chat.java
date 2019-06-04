@@ -189,6 +189,9 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         mjpegView = (MjpegView) findViewById(R.id.surface_view);
 
+        mIpAddress = (TextView) findViewById(R.id.ipAddressText);
+        mIpAddress.setText("127.0.0.1");
+
 
         // ------------------------------  SENSOR SETUP ----------------------------- //
         // ##########################################################################//
@@ -227,7 +230,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         // ----------------------------  JOYSTICK SETUP ----------------------------- //
         // ###########################################################################//
         mTextViewCoordinateLeft = (TextView) findViewById(R.id.textView_coordinate_left);
-        mIpAddress = findViewById(R.id.ipAddressText);
+
         joystickLeft = (JoystickView) findViewById(R.id.joystickView_left);
         joystickLeft.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
@@ -291,6 +294,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     @Override
     public void onResume(){
         super.onResume();
+        mIpAddress.setText(mIP);
         loadIpCam();
 
     }
@@ -530,7 +534,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         mIP = message;
         if(!loaded){
             Log.d("onMessage",message);
-            mIpAddress.setText(message);
+            mIpAddress.setText(mIP);
             loadIpCam();
             loaded=true;
         }
