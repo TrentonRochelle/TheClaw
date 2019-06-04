@@ -18,9 +18,9 @@
         android:layout_height="30dp"
         android:layout_alignStart="@+id/joystickView_left"
         android:layout_alignTop="@+id/surface_view"
-        android:layout_marginStart="186dp"
+        android:layout_marginStart="153dp"
         android:layout_marginTop="363dp"
-        android:background="@drawable/button_unlocked" />
+        android:background="@drawable/waist_unlocked" />
 
 
     <Button
@@ -31,7 +31,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="362dp"
         android:layout_toEndOf="@+id/waistLock"
-        android:background="@drawable/button_unlocked" />
+        android:background="@drawable/shoulder_unlocked" />
 
     <Button
         android:id="@+id/elbowLock"
@@ -41,7 +41,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="362dp"
         android:layout_toEndOf="@+id/shoulderLock"
-        android:background="@drawable/button_unlocked" />
+        android:background="@drawable/elbow_unlocked" />
 
     <Button
         android:id="@+id/wristElevationLock"
@@ -51,7 +51,7 @@
         android:layout_marginTop="362dp"
         android:layout_marginEnd="18dp"
         android:layout_toStartOf="@+id/wristRotationLock"
-        android:background="@drawable/button_unlocked" />
+        android:background="@drawable/wrist_elevation_unlocked" />
 
     <Button
         android:id="@+id/wristRotationLock"
@@ -61,7 +61,7 @@
         android:layout_marginTop="362dp"
         android:layout_marginEnd="18dp"
         android:layout_toStartOf="@+id/clawLock"
-        android:background="@drawable/button_unlocked" />
+        android:background="@drawable/wrist_rotate_unlocked" />
 
     <Button
         android:id="@+id/clawLock"
@@ -70,8 +70,8 @@
         android:layout_alignTop="@+id/surface_view"
         android:layout_alignEnd="@+id/joystickView_right"
         android:layout_marginTop="362dp"
-        android:layout_marginEnd="185dp"
-        android:background="@drawable/button_unlocked" />
+        android:layout_marginEnd="153dp"
+        android:background="@drawable/claw_unlocked" />
 
     <TextView
         android:id="@+id/textView_gyros_left"
@@ -182,12 +182,136 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/surface_view"
-        android:layout_alignEnd="@+id/surface_view"
         android:layout_alignBottom="@+id/surface_view"
         android:layout_marginStart="29dp"
-        android:layout_marginEnd="614dp"
         android:layout_marginBottom="355dp"
         android:text="Home" />
+
+    <ImageView
+        android:id="@+id/elbowUp"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="330dp"
+        stream:srcCompat="@drawable/elbow_up" />
+
+    <ImageView
+        android:id="@+id/elbowDown"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="122dp"
+        android:layout_marginBottom="144dp"
+        stream:srcCompat="@drawable/elbow_down" />
+
+    <ImageView
+        android:id="@+id/clawOpen"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="23dp"
+        android:layout_marginBottom="236dp"
+        stream:srcCompat="@drawable/claw_open" />
+
+    <ImageView
+        android:id="@+id/wristElDown"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="337dp"
+        android:layout_marginEnd="336dp"
+        android:layout_marginBottom="21dp"
+        stream:srcCompat="@drawable/wrist_elevation_down" />
+
+    <ImageView
+        android:id="@+id/wristElUp"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="337dp"
+        android:layout_marginEnd="336dp"
+        android:layout_marginBottom="345dp"
+        stream:srcCompat="@drawable/wrist_elevation_up" />
+
+    <ImageView
+        android:id="@+id/wristRotRight"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="126dp"
+        stream:srcCompat="@drawable/wrist_rotate_right" />
+
+    <ImageView
+        android:id="@+id/wristRotLeft"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="17dp"
+        android:layout_marginBottom="128dp"
+        stream:srcCompat="@drawable/wrist_rotate_left" />
+
+    <ImageView
+        android:id="@+id/waistCCW2"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/joystickView_right"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="217dp"
+        android:layout_marginBottom="236dp"
+        stream:srcCompat="@drawable/waist_ccw" />
+
+    <ImageView
+        android:id="@+id/shoulderDown"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginEnd="122dp"
+        android:layout_marginBottom="137dp"
+        stream:srcCompat="@drawable/shoulder_down" />
+
+    <ImageView
+        android:id="@+id/clawClose"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="224dp"
+        android:layout_marginBottom="233dp"
+        stream:srcCompat="@drawable/claw_open" />
+
+    <ImageView
+        android:id="@+id/waistCW"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="235dp"
+        stream:srcCompat="@drawable/waist_cw" />
+
+    <ImageView
+        android:id="@+id/shoulderUp"
+        android:layout_width="58dp"
+        android:layout_height="54dp"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginEnd="121dp"
+        android:layout_marginBottom="332dp"
+        stream:srcCompat="@drawable/shoulder_up" />
 
     <!--custom:JV_borderColor="#00FFFFFF"-->
     <!--<EditText-->

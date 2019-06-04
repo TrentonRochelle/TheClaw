@@ -321,20 +321,20 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
 
                 int bandaidWristEl = joystickRight.getNormalizedY()==52 ? 50 : joystickRight.getNormalizedY();
-                wristElVelocity = (-1.0 + bandaidWristEl/50.0) * 1.414;
-                wristElVelocity = wristElVelocity > 1 ? 1 : wristElVelocity;
-                wristElVelocity = wristElVelocity < -1 ? -1 : wristElVelocity;
-                wristElVelocity = .005*(wristElVelocity*wristElVelocity*wristElVelocity);
+                shoulderVelocity = (-1.0 + bandaidWristEl/50.0) * 1.414;
+                shoulderVelocity = shoulderVelocity > 1 ? 1 : shoulderVelocity;
+                shoulderVelocity = shoulderVelocity < -1 ? -1 : shoulderVelocity;
+                shoulderVelocity = .005*(shoulderVelocity*shoulderVelocity*shoulderVelocity);
 
                 int bandaidWristRot = joystickRight.getNormalizedX()==52 ? 50 : joystickRight.getNormalizedX();
-                wristRotVelocity = (1.0 - bandaidWristRot/50.0) * 1.414;
-                wristRotVelocity = wristRotVelocity > 1 ? 1 : wristRotVelocity;
-                wristRotVelocity = wristRotVelocity < -1 ? -1 : wristRotVelocity;
-                wristRotVelocity = .005*(wristRotVelocity*wristRotVelocity*wristRotVelocity);
+                waistVelocity = (1.0 - bandaidWristRot/50.0) * 1.414;
+                waistVelocity = waistVelocity > 1 ? 1 : waistVelocity;
+                waistVelocity = waistVelocity < -1 ? -1 : waistVelocity;
+                waistVelocity = .005*(waistVelocity*waistVelocity*waistVelocity);
 
                 mTextViewCoordinateRight.setText(
-                        String.format("wrist_el=%.3f: wrist_rot=%.3f",
-                                wristElVelocity,wristRotVelocity)
+                        String.format("shoulder=%.3f: waist=%.3f",
+                                shoulderVelocity,waistVelocity)
                 );
             }
         });
@@ -360,60 +360,60 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
                 // Do something
                 waistLock = !waistLock;
                 if(waistLock){
-                    waistLockButton.setBackgroundResource(R.drawable.button_locked);
+                    waistLockButton.setBackgroundResource(R.drawable.waist_locked);
                 }
                 else{
-                    waistLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                    waistLockButton.setBackgroundResource(R.drawable.waist_unlocked);
                 }
                 break;
             case R.id.shoulderLock:
                 // Do something
                 shoulderLock = !shoulderLock;
                 if(shoulderLock){
-                    shoulderLockButton.setBackgroundResource(R.drawable.button_locked);
+                    shoulderLockButton.setBackgroundResource(R.drawable.shoulder_locked);
                 }
                 else{
-                    shoulderLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                    shoulderLockButton.setBackgroundResource(R.drawable.shoulder_unlocked);
                 }
                 break;
             case R.id.elbowLock:
                 // Do something
                 elbowLock = !elbowLock;
                 if(elbowLock){
-                    elbowLockButton.setBackgroundResource(R.drawable.button_locked);
+                    elbowLockButton.setBackgroundResource(R.drawable.elbow_locked);
                 }
                 else{
-                    elbowLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                    elbowLockButton.setBackgroundResource(R.drawable.elbow_unlocked);
                 }
                 break;
             case R.id.wristElevationLock:
                 // Do something
                 wristElevationLock = !wristElevationLock;
                 if(wristElevationLock){
-                    wristElevationLockButton.setBackgroundResource(R.drawable.button_locked);
+                    wristElevationLockButton.setBackgroundResource(R.drawable.wrist_elevation_locked);
                 }
                 else{
-                    wristElevationLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                    wristElevationLockButton.setBackgroundResource(R.drawable.wrist_elevation_unlocked);
                 }
                 break;
             case R.id.wristRotationLock:
                 // Do something
                 wristRotationLock = !wristRotationLock;
                 if(wristRotationLock){
-                    wristRotationLockButton.setBackgroundResource(R.drawable.button_locked);
+                    wristRotationLockButton.setBackgroundResource(R.drawable.wrist_rotate_locked);
                 }
                 else{
-                    wristRotationLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                    wristRotationLockButton.setBackgroundResource(R.drawable.wrist_rotate_unlocked);
                 }
                 break;
             case R.id.clawLock:
                 // Do something
                 clawLock = !clawLock;
                 if(clawLock){
-                    clawLockButton.setBackgroundResource(R.drawable.button_locked);
+                    clawLockButton.setBackgroundResource(R.drawable.claw_locked);
                 }
                 else{
-                    clawLockButton.setBackgroundResource(R.drawable.button_unlocked);
+                    clawLockButton.setBackgroundResource(R.drawable.claw_unlocked);
                 }
                 break;
             default:
@@ -497,23 +497,22 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         if (sensor.getType() == Sensor.TYPE_GRAVITY) {
 
-            waistVelocity = event.values[1]/10;
+            wristRotVelocity = event.values[1]/10;
             currentPitch = event.values[0];
-            shoulderVelocity = -(currentPitch-pitchMiddle)/10;
+            wristElVelocity = -(currentPitch-pitchMiddle)/10;
 
 //            currentPitch = shoulderVelocity;
-//          waistVelocity = waistVelocity * .4;
-            waistVelocity = .4*(waistVelocity*waistVelocity*waistVelocity*waistVelocity*waistVelocity);
-            shoulderVelocity = .02*(shoulderVelocity*shoulderVelocity*shoulderVelocity);
+            wristRotVelocity = .4*(wristRotVelocity*wristRotVelocity*wristRotVelocity);
+            wristElVelocity = .2*(wristElVelocity*wristElVelocity*wristElVelocity);
 
-            waistVelocity = waistVelocity > .04 ? .04 : waistVelocity;
-            waistVelocity = waistVelocity < -.04 ? -.04 : waistVelocity;
-            shoulderVelocity = shoulderVelocity > .005 ? .005 : shoulderVelocity;
-            shoulderVelocity = shoulderVelocity < -.005 ? -.005 : shoulderVelocity;
+            wristRotVelocity = wristRotVelocity > .04 ? .04 : wristRotVelocity;
+            wristRotVelocity = wristRotVelocity < -.04 ? -.04 : wristRotVelocity;
+            wristElVelocity = wristElVelocity > .04 ? .04 : wristElVelocity;
+            wristElVelocity = wristElVelocity < -.04 ? -.04 : wristElVelocity;
 
             mTextViewGyroLeft.setText(
-                    String.format("waist=%.3f: shoulder=%.3f",
-                            waistVelocity,shoulderVelocity)
+                    String.format("wrist_rot=%.3f: wrist_el=%.3f",
+                            wristRotVelocity,wristElVelocity)
             );
 
 
