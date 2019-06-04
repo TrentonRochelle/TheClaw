@@ -80,6 +80,9 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private double elbowVelocity = 0.0;
     private double clawVelocity = 0.0;
 
+    private double pitchMiddle = 0.0;
+    private double currentPitch = 0.0;
+
     private boolean waistLock = false;
     private boolean shoulderLock = false;
     private boolean wristElevationLock = false;
@@ -101,6 +104,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private boolean mRequestIP = false;
     private boolean loaded = false;
 
+
     private Button waistLockButton;
     private Button shoulderLockButton;
     private Button elbowLockButton;
@@ -108,10 +112,15 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     private Button wristRotationLockButton;
     private Button clawLockButton;
 
+    private Button requestCameraStream;
+    private Button recalibratePitch;
+    private Button returnHome;
+
     // Create the Handler object (on the main thread by default)
     Handler handler = new Handler();
     // Define the code block to be executed
     private Runnable runnableCode = new Runnable() {
+
         @Override
         public void run() {
             // Do something here on the main thread
@@ -173,12 +182,27 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
 
         mContext = getApplicationContext();
 
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE
+            // Set the content to appear under the system bars so that the
+            // content doesn't resize when the system bars hide and show.
+            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            // Hide the nav bar and status bar
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
         waistLockButton = findViewById(R.id.waistLock);
         shoulderLockButton = findViewById(R.id.shoulderLock);
         elbowLockButton = findViewById(R.id.elbowLock);
         wristElevationLockButton = findViewById(R.id.wristElevationLock);
         wristRotationLockButton = findViewById(R.id.wristRotationLock);
         clawLockButton = findViewById(R.id.clawLock);
+
+        requestCameraStream = findViewById(R.id.requestCamera);
+        recalibratePitch = findViewById(R.id.calibrationButton);
+        returnHome = findViewById(R.id.returnHome);
 
         waistLockButton.setOnClickListener(this);
         shoulderLockButton.setOnClickListener(this);
@@ -187,10 +211,34 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         wristRotationLockButton.setOnClickListener(this);
         clawLockButton.setOnClickListener(this);
 
-        mjpegView = (MjpegView) findViewById(R.id.surface_view);
 
+        //  Set on click listeners for on screen buttons
+        requestCameraStream.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                loadIpCam();
+            }
+        });
+        recalibratePitch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                pitchMiddle = currentPitch;
+                Toast.makeText(getApplicationContext(), Double.toString(pitchMiddle), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        returnHome.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                b.send("H");
+            }
+        });
+
+
+
+        mjpegView = (MjpegView) findViewById(R.id.surface_view);
         mIpAddress = (TextView) findViewById(R.id.ipAddressText);
         mIpAddress.setText("127.0.0.1");
+
 
 
         // ------------------------------  SENSOR SETUP ----------------------------- //
@@ -203,6 +251,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         }
 
         // ###########################################################################//
+
 
 
         // -------------------------  BLUETOOTH/TIMER SETUP ------------------------- //
@@ -236,13 +285,17 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             @Override
             public void onMove(int angle, int strength) {
 
-                int bandaidElbow = joystickLeft.getNormalizedX()==52 ? 50 : joystickLeft.getNormalizedX();
+
+
+                int bandaidElbow = joystickLeft.getNormalizedY()==52 ? 50 : joystickLeft.getNormalizedY();
                 elbowVelocity = (-1.0 + bandaidElbow/50.0) * 1.414;
                 elbowVelocity = elbowVelocity > 1 ? 1 : elbowVelocity;
                 elbowVelocity = elbowVelocity < -1 ? -1 : elbowVelocity;
-                elbowVelocity = .005*(elbowVelocity*elbowVelocity*elbowVelocity);
+                elbowVelocity = -.005*(elbowVelocity*elbowVelocity*elbowVelocity);
 
-                int bandaidClaw = joystickLeft.getNormalizedY()==52 ? 50 : joystickLeft.getNormalizedY();
+
+
+                int bandaidClaw = joystickLeft.getNormalizedX()==52 ? 50 : joystickLeft.getNormalizedX();
                 clawVelocity = (1.0 - bandaidClaw/50.0) * 1.414;
                 clawVelocity = clawVelocity > 1 ? 1 : clawVelocity;
                 clawVelocity = clawVelocity < -1 ? -1 : clawVelocity;
@@ -267,13 +320,13 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
             public void onMove(int angle, int strength) {
 
 
-                int bandaidWristEl = joystickRight.getNormalizedX()==52 ? 50 : joystickRight.getNormalizedX();
+                int bandaidWristEl = joystickRight.getNormalizedY()==52 ? 50 : joystickRight.getNormalizedY();
                 wristElVelocity = (-1.0 + bandaidWristEl/50.0) * 1.414;
                 wristElVelocity = wristElVelocity > 1 ? 1 : wristElVelocity;
                 wristElVelocity = wristElVelocity < -1 ? -1 : wristElVelocity;
                 wristElVelocity = .005*(wristElVelocity*wristElVelocity*wristElVelocity);
 
-                int bandaidWristRot = joystickRight.getNormalizedY()==52 ? 50 : joystickRight.getNormalizedY();
+                int bandaidWristRot = joystickRight.getNormalizedX()==52 ? 50 : joystickRight.getNormalizedX();
                 wristRotVelocity = (1.0 - bandaidWristRot/50.0) * 1.414;
                 wristRotVelocity = wristRotVelocity > 1 ? 1 : wristRotVelocity;
                 wristRotVelocity = wristRotVelocity < -1 ? -1 : wristRotVelocity;
@@ -416,7 +469,7 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
                         },
                         throwable -> {
                             Log.e(getClass().getSimpleName(), "mjpeg error", throwable);
-                            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
                         });
 
 
@@ -427,13 +480,11 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     // MATH FUNCTIONS
 
     private double smoothControlFunction(double x) {
-
         return (1.5*x);
     }
 
 
-
-
+    // GYRO SENSOR CONTROLS
     @Override
     public void onAccuracyChanged (Sensor sensor, int accuracy) {
 
@@ -447,8 +498,11 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         if (sensor.getType() == Sensor.TYPE_GRAVITY) {
 
             waistVelocity = event.values[1]/10;
-            shoulderVelocity = -event.values[0]/10;
-//            waistVelocity = waistVelocity * .4;
+            currentPitch = event.values[0];
+            shoulderVelocity = -(currentPitch-pitchMiddle)/10;
+
+//            currentPitch = shoulderVelocity;
+//          waistVelocity = waistVelocity * .4;
             waistVelocity = .4*(waistVelocity*waistVelocity*waistVelocity*waistVelocity*waistVelocity);
             shoulderVelocity = .02*(shoulderVelocity*shoulderVelocity*shoulderVelocity);
 

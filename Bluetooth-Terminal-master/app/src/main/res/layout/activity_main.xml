@@ -4,16 +4,7 @@
     xmlns:stream="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Chat">
-
-    <!--<com.github.niqdev.mjpeg.MjpegSurfaceView-->
-        <!--android:id="@+id/surface_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--stream:type="stream_default" />-->
+    tools:context=".Chat">
 
     <com.github.niqdev.mjpeg.MjpegSurfaceView
         android:id="@+id/surface_view"
@@ -21,23 +12,15 @@
         android:layout_height="match_parent"
         stream:type="stream_default" />
 
-
-
-    <!--<MjpegViewer.MjpegView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/videwView" />-->
-
     <Button
         android:id="@+id/waistLock"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignStart="@+id/joystickView_left"
         android:layout_alignTop="@+id/surface_view"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginStart="186dp"
+        android:layout_marginTop="363dp"
         android:background="@drawable/button_unlocked" />
-
 
 
     <Button
@@ -45,8 +28,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignTop="@+id/surface_view"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="362dp"
         android:layout_toEndOf="@+id/waistLock"
         android:background="@drawable/button_unlocked" />
 
@@ -55,8 +38,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignTop="@+id/surface_view"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="362dp"
         android:layout_toEndOf="@+id/shoulderLock"
         android:background="@drawable/button_unlocked" />
 
@@ -65,8 +48,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignTop="@+id/surface_view"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginTop="362dp"
+        android:layout_marginEnd="18dp"
         android:layout_toStartOf="@+id/wristRotationLock"
         android:background="@drawable/button_unlocked" />
 
@@ -75,8 +58,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignTop="@+id/surface_view"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginTop="362dp"
+        android:layout_marginEnd="18dp"
         android:layout_toStartOf="@+id/clawLock"
         android:background="@drawable/button_unlocked" />
 
@@ -86,38 +69,48 @@
         android:layout_height="30dp"
         android:layout_alignTop="@+id/surface_view"
         android:layout_alignEnd="@+id/joystickView_right"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="220dp"
+        android:layout_marginTop="362dp"
+        android:layout_marginEnd="185dp"
         android:background="@drawable/button_unlocked" />
 
     <TextView
         android:id="@+id/textView_gyros_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_coordinate_left"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:text="waist=0.000: shoulder=0.000" />
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="315dp"
+        android:layout_marginEnd="11dp"
+        android:text="waist=0.000: shoulder=0.000"
+        android:textColor="#000000" />
 
     <TextView
         android:id="@+id/textView_coordinate_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/surface_view"
         android:layout_alignTop="@+id/joystickView_left"
-        android:layout_marginTop="1dp"
-        android:textColor="#000000"
-        android:text="elbow=0.000: claw=0.000" />
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="310dp"
+        android:text="elbow=0.000: claw=0.000"
+        android:textColor="#000000" />
 
     <io.github.controlwear.virtual.joystick.android.JoystickView xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/joystickView_left"
         android:layout_width="249dp"
         android:layout_height="242dp"
+        android:layout_alignStart="@+id/surface_view"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="25dp"
         custom:JV_backgroundColor="#00BCC90E"
         custom:JV_backgroundSizeRatio="60%"
-        custom:JV_borderWidth="2dp"
         custom:JV_borderColor="#C3C3C3"
+        custom:JV_borderWidth="2dp"
         custom:JV_buttonColor="#40FFFFF2"
         custom:JV_buttonSizeRatio="20%" />
 
@@ -126,25 +119,24 @@
         android:id="@+id/textView_coordinate_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/joystickView_right"
+        android:layout_alignTop="@+id/surface_view"
         android:layout_alignEnd="@+id/joystickView_right"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="13dp"
-        android:textColor="#000000"
-        android:text="wrist_el=0.000: wrist_rot=0.000" />
+        android:layout_marginTop="335dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="11dp"
+        android:text="wrist_el=0.000: wrist_rot=0.000"
+        android:textColor="#000000" />
 
     <TextView
         android:id="@+id/ipAddressText"
-        android:layout_width="50dp"
+        android:layout_width="93dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/joystickView_left"
-        android:layout_alignEnd="@+id/surface_view"
-        android:layout_alignBottom="@+id/surface_view"
-        android:layout_marginStart="648dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_below="@+id/textView_gyros_left"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginRight="35dp"
         android:text="IPADDRESS"
         android:textColor="#000000" />
 
@@ -154,12 +146,48 @@
         android:layout_height="242dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="26dp"
         stream:JV_backgroundColor="#00BCC90E"
         stream:JV_backgroundSizeRatio="60%"
         stream:JV_borderColor="#C3C3C3"
         stream:JV_borderWidth="2dp"
         stream:JV_buttonColor="#40FFFFF2"
         stream:JV_buttonSizeRatio="20%" />
+
+    <Button
+        android:id="@+id/requestCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/surface_view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="354dp"
+        android:layout_marginBottom="9dp"
+        android:text="Camera" />
+
+    <Button
+        android:id="@+id/calibrationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="9dp"
+        android:text="Center" />
+
+    <Button
+        android:id="@+id/returnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/surface_view"
+        android:layout_alignEnd="@+id/surface_view"
+        android:layout_alignBottom="@+id/surface_view"
+        android:layout_marginStart="29dp"
+        android:layout_marginEnd="614dp"
+        android:layout_marginBottom="355dp"
+        android:text="Home" />
 
     <!--custom:JV_borderColor="#00FFFFFF"-->
     <!--<EditText-->
