@@ -57,6 +57,8 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
     public static final String PREF_FLIP_HORIZONTAL = "com.github.niqdev.ipcam.settings.SettingsActivity.FLIP_HORIZONTAL";
     public static final String PREF_FLIP_VERTICAL= "com.github.niqdev.ipcam.settings.SettingsActivity.FLIP_VERTICAL";
 
+    
+
     private boolean registered=false;
 
     private TextView mTextViewAngleLeft;
@@ -134,14 +136,12 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
                 clawVelocity=0.0;
             }
 
-
             String waist_string = String.format("%.3f", waistVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String shoulder_string = String.format("%.3f", shoulderVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String elbow_string = String.format("%.3f", elbowVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String wrist_el_string = String.format("%.3f", wristElVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String wrist_rot_string = String.format("%.3f", wristRotVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
             String claw_string = String.format("%.3f", clawVelocity).replaceAll("(\\.\\d+?)0*$", "$1");
-
 
             StringBuilder cmd_string = new StringBuilder();
             cmd_string.append("s");
@@ -172,12 +172,14 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         setContentView(R.layout.activity_main);
 
         mContext = getApplicationContext();
+
         waistLockButton = findViewById(R.id.waistLock);
         shoulderLockButton = findViewById(R.id.shoulderLock);
         elbowLockButton = findViewById(R.id.elbowLock);
         wristElevationLockButton = findViewById(R.id.wristElevationLock);
         wristRotationLockButton = findViewById(R.id.wristRotationLock);
         clawLockButton = findViewById(R.id.clawLock);
+
         waistLockButton.setOnClickListener(this);
         shoulderLockButton.setOnClickListener(this);
         elbowLockButton.setOnClickListener(this);
@@ -186,8 +188,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         clawLockButton.setOnClickListener(this);
 
         mjpegView = (MjpegView) findViewById(R.id.surface_view);
-
-
 
 
         // ------------------------------  SENSOR SETUP ----------------------------- //
@@ -212,20 +212,15 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         int pos = getIntent().getExtras().getInt("pos");
         name = b.getPairedDevices().get(pos).getName();
 
-//        Display("Connecting...");
         b.connectToDevice(b.getPairedDevices().get(pos));
 
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         registered=true;
 
-//        while(!b.isConnected()){
-//            System.out.println("wowowowoowwow");
-//        }
         // Start the initial runnable task by posting through the handler
         handler.post(runnableCode);
         // ###########################################################################//
-
 
 
 
@@ -291,9 +286,6 @@ public class Chat extends AppCompatActivity implements Bluetooth.CommunicationCa
         joystickRight.setEnabled(false);
         joystickLeft.setEnabled(false);
         // ###########################################################################//
-
-
-
     }
 
     @Override
